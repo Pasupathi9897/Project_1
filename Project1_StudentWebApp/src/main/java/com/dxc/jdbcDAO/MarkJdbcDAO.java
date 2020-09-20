@@ -26,12 +26,14 @@ public class MarkJdbcDAO extends jdbcDAO implements MarkDAO<Mark> {
 	public boolean save(Mark e) throws SQLException, ParseException, FileNotFoundException, ClassNotFoundException, IOException {
 		boolean res=false;
 		
-		p=con.prepareStatement("insert into mark values(?,?,?,?,?)");
+		p=con.prepareStatement("insert into mark values(?,?,?,?,?,?,?)");
 		p.setString(1, e.getExamid());
 		p.setInt(2,e.getStudentid());
-		p.setInt(3,e.getMark1());
-		p.setInt(4,e.getMark2());
-		p.setInt(5,e.getMark3());
+		p.setString(3,e.getName());
+		p.setString(4,e.getExam_name());
+		p.setInt(5,e.getSub1());
+		p.setInt(6,e.getSub2());
+		p.setInt(7,e.getSub3());
 		if(1==p.executeUpdate())
 		{
 			res=true;
@@ -44,12 +46,14 @@ public class MarkJdbcDAO extends jdbcDAO implements MarkDAO<Mark> {
 	@Override
 	public boolean edit(Mark e) throws SQLException, ParseException, FileNotFoundException, ClassNotFoundException, IOException {
 		boolean res=false;
-		p=con.prepareStatement("update mark set mark1=?,mark2=?,mark3=? where examid=? and studentid=?");
-		p.setInt(1,e.getMark1());
-		p.setInt(2,e.getMark2());
-		p.setInt(3,e.getMark3());
-		p.setString(4, e.getExamid());
-		p.setInt(5, e.getStudentid());
+		p=con.prepareStatement("update mark set name=?,exam_name=?,sub1=?,sub2=?,sub3=? where examid=? and studentid=?");
+		p.setString(1,e.getName());
+		p.setString(2,e.getExam_name());
+		p.setInt(3,e.getSub1());
+		p.setInt(4,e.getSub2());
+		p.setInt(5,e.getSub3());
+		p.setString(6, e.getExamid());
+		p.setInt(7, e.getStudentid());
 		if(1==p.executeUpdate())
 		{
 			res=true;
@@ -76,29 +80,26 @@ public class MarkJdbcDAO extends jdbcDAO implements MarkDAO<Mark> {
 	}
 
 	@Override
-	public Mark find(String examid, int studentid) throws SQLException, ParseException, FileNotFoundException, ClassNotFoundException, IOException {
+	public List<Mark> find(String examid) throws SQLException, ParseException, FileNotFoundException, ClassNotFoundException, IOException {
+		List<Mark> marks=new ArrayList<>();
 		Mark mark=null;
-		try {
-			p=con.prepareStatement("select * from mark where examid=? and studentid=?");
+		p=con.prepareStatement("select * from mark where examid=?");
 		p.setString(1, examid);
-		p.setInt(2,studentid);
-		
 		rs=p.executeQuery();
-		
-		if(rs.next())
+		while(rs.next())
 		{
-			int mark1=rs.getInt(3);
-			int mark2=rs.getInt(4);
-			int mark3=rs.getInt(5);
-		
-			mark=new Mark(examid, studentid, mark1, mark2, mark3);
+			String examid1=rs.getString("examid");
+			int studentid=rs.getInt(2);
+			String name=rs.getString(3);
+			String exam_name=rs.getString(4);
+			int sub1=rs.getInt(5);
+			int sub2=rs.getInt(6);
+			int sub3=rs.getInt(7);
+			mark=new Mark(examid1, studentid, name, exam_name, sub1, sub2, sub3);
+			marks.add(mark);
 		}
-		}
-		finally
-		{
-			con.close();
-		}
-		return mark;
+		return marks;
+
 	}
 
 
@@ -112,10 +113,12 @@ public class MarkJdbcDAO extends jdbcDAO implements MarkDAO<Mark> {
 		{
 			String examid=rs.getString("examid");
 			int studentid=rs.getInt(2);
-			int mark1=rs.getInt(3);
-			int mark2=rs.getInt(4);
-			int mark3=rs.getInt(5);
-			mark=new Mark(examid, studentid, mark1, mark2, mark3);
+			String name=rs.getString(3);
+			String exam_name=rs.getString(4);
+			int sub1=rs.getInt(5);
+			int sub2=rs.getInt(6);
+			int sub3=rs.getInt(7);
+			mark=new Mark(examid, studentid, name, exam_name, sub1, sub2, sub3);
 			marks.add(mark);
 		}
 		return marks;

@@ -75,7 +75,7 @@ public class ExamJdbcDAO extends jdbcDAO implements ExamDAO<Exam> {
 		Exam exam=null;
 		try {
 		con=ConnectionManager.getConnection();
-		p=con.prepareStatement("select * from student where studentid=?");
+		p=con.prepareStatement("select * from exam where examid=?");
 		
 		p.setString(1,id);
 		

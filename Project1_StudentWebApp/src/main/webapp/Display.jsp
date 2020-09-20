@@ -16,13 +16,14 @@
 </head>
 <body>
 	<h2>Student DataBase</h2>
-	<table>
+	<table border="1" bgcolor="#bbcae6" cellspacing="5" cellpadding="5">
 	<tr>
 	<th>Id</th>
 	<th>Name</th>
 	<th>Dob</th>
 	<th>Email</th>
 	<th>Mobile</th>
+	<th>Edit/Delete</th>
 	</tr>
 	<%
 	List<Student> students=new StudentHibServiceImp().findAll();
